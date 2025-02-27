@@ -11,10 +11,14 @@ authorizedAxios.defaults.timeout = 1000*60*10
 // withCredentials: true cho phép axios tự động đính kèm và  gửi cookie trong request tới BE
 // phục vụ trường hợp nếu chúng ta sử dụng JWT Tokens ( refresh & access) theo cơ chế httpOnly Cookie
 
-// authorizedAxios.defaults.withCredentials = true
+authorizedAxios.defaults.withCredentials = true
 
 // can thiệp vào giữa những cái request API
 authorizedAxios.interceptors.request.use((config) => {
+    const accessToken = localStorage.getItem('accessToken')
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}` 
+    }
         return config
     },(error) => {
         return Promise.reject(error)

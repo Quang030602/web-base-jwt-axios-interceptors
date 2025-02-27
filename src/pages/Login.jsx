@@ -1,4 +1,3 @@
-// Author: TrungQuanDev: https://youtube.com/@trungquandev
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { Card as MuiCard } from '@mui/material'
@@ -12,6 +11,7 @@ import TrungQuanDevIcon from '../assets/trungquandev-logo.png'
 import { toast } from 'react-toastify'
 import { API_ROOT } from '~/utils/constants'
 import authorizedAxiosInstance from '~/utils/authorizedAxios'
+import {useNavigate} from 'react-router-dom'
 
 function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm()
@@ -19,8 +19,19 @@ function Login() {
   const submitLogIn = async (data) => {
    
     const res = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/login`, data)
-    toast.success(res.data?.message)
-    
+    const userInfo ={
+      id: res.data.id,
+      email: res.data.email,
+    }    
+    // Lưu token và thông tin user vào localStorage
+    localStorage.setItem('accessToken',res.data.accessToken)
+    localStorage.setItem('refreshToken',res.data.refreshToken)
+    localStorage.setItem('userInfo',JSON.stringify(userInfo))
+    toast.success('Login successfully!')
+
+    // Chuyển hướng đến trang Dashboard
+    const navigate = useNavigate()
+    navigate('/dashboard')
   }
 
   return (
