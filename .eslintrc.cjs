@@ -1,4 +1,3 @@
-// Updated by trungquandev.com's author on May 13 2023
 // Sample Eslint config for React project
 module.exports = {
   env: { browser: true, es2020: true, node: true },
@@ -32,7 +31,7 @@ module.exports = {
     ],
 
     // Common
-    'no-console': 1,
+    'no-console': 'off',
     'no-extra-boolean-cast': 0,
     'no-lonely-if': 1,
     'no-unused-vars': 1,
