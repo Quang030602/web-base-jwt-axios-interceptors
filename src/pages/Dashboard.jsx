@@ -1,4 +1,3 @@
-// Author: TrungQuanDev: https://youtube.com/@trungquandev
 import { useEffect, useState } from 'react'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
@@ -9,6 +8,7 @@ import authorizedAxiosInstance from '~/utils/authorizedAxios'
 import { API_ROOT } from '~/utils/constants'
 import { Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { handleLogoutAPI } from '~/apis'
 
 function Dashboard() {
   const [user, setUser] = useState(null)
@@ -23,11 +23,8 @@ function Dashboard() {
     fetchData()
   }, [])
   const handleLogout = async() => {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
+    await handleLogoutAPI()
     localStorage.removeItem('userInfo')
-    await authorizedAxiosInstance.delete(`${API_ROOT}/v1/users/logout`)
-    setUser(null)
     navigate('/login')
   }
   if (!user) {
@@ -66,7 +63,7 @@ function Dashboard() {
         color= 'info'
         size='large'
         sx={{ mt: 2, maxWidth:'100%', alignSelf:'flex-end' }}
-        onClick={() => {handleLogout}}
+        onClick={handleLogout}
       >
         Log out
       </Button>

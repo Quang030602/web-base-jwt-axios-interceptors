@@ -23,6 +23,7 @@ function App() {
       } />
       <Route element={<UnauthorizedRoutes />}>
         <Route path='/login' element={<Login />} />
+
       </Route>
 
       <Route element={<ProtectedRoute />}>

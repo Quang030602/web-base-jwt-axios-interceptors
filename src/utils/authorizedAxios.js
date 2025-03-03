@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { handleLogoutAPI, refreshTokenAPI } from '~/apis'
 
 // khởi tạo 1 đối tưởng Axios mục đích để custom và cấu hình chung cho dự án
 let authorizedAxiosInstance = axios.create()
@@ -27,6 +28,32 @@ authorizedAxiosInstance.interceptors.response.use((response) => {
 }, (error) => {
   if (error?.response?.status !== 410) {
     // xử lý logout
+    if (error?.response?.status === 401) {
+      handleLogoutAPI().then(() => {
+
+        location.href = '/login'
+      }
+      )
+    }
+    const originalRequest = error.config
+    if (error?.response?.status === 410 && !originalRequest._retry) {
+      originalRequest._retry = true
+      const refreshToken = localStorage.getItem('refreshToken')
+      return refreshTokenAPI(refreshToken).
+        then(( res ) => {
+          const { accessToken } = res.data
+          localStorage.setItem('accessToken', accessToken)
+          authorizedAxiosInstance.headers.Authorization = `Bearer ${accessToken}`
+          return authorizedAxiosInstance(originalRequest)
+        })
+        .catch(( err ) => {
+          handleLogoutAPI().then(() => {
+
+            location.href = '/login'
+          })
+          return Promise.reject(err)
+        })
+    }
     toast.error(error.response?.data?.message || error?.message)
   }
   return Promise.reject(error)
