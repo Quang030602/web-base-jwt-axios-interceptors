@@ -21,26 +21,31 @@ authorizedAxiosInstance.interceptors.request.use((config) => {
 }, (error) => {
   return Promise.reject(error)
 })
+let refreshTokenPromise = null
+
 
 // can thiệp vào giữa những cái response nhận về từ API
 authorizedAxiosInstance.interceptors.response.use((response) => {
   return response
 }, (error) => {
-  if (error?.response?.status !== 410) {
-    // xử lý logout
-    if (error?.response?.status === 401) {
-      handleLogoutAPI().then(() => {
+  if (error?.response?.status === 401) {
+    handleLogoutAPI().then(() => {
 
-        location.href = '/login'
-      }
-      )
+      location.href = '/login'
     }
-    const originalRequest = error.config
-    if (error?.response?.status === 410 && !originalRequest._retry) {
-      originalRequest._retry = true
+    )
+  }
+
+  // xử lý logout
+
+  const originalRequest = error.config
+  if (error?.response?.status === 410 && !originalRequest._retry) {
+    originalRequest._retry = true
+
+    if (!refreshTokenPromise) {
       const refreshToken = localStorage.getItem('refreshToken')
-      return refreshTokenAPI(refreshToken).
-        then(( res ) => {
+      refreshTokenPromise= refreshTokenAPI(refreshToken)
+        .then(( res ) => {
           const { accessToken } = res.data
           localStorage.setItem('accessToken', accessToken)
           authorizedAxiosInstance.headers.Authorization = `Bearer ${accessToken}`
@@ -53,7 +58,15 @@ authorizedAxiosInstance.interceptors.response.use((response) => {
           })
           return Promise.reject(err)
         })
+        .finally(() => {
+          refreshTokenPromise = null
+        })
     }
+    return refreshTokenPromise.then(() => {
+      return authorizedAxiosInstance(originalRequest)
+    })
+  }
+  if (error?.response?.status !== 410) {
     toast.error(error.response?.data?.message || error?.message)
   }
   return Promise.reject(error)
