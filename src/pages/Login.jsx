@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField'
 import Zoom from '@mui/material/Zoom'
 import Alert from '@mui/material/Alert'
 import { useForm } from 'react-hook-form'
-import Typography from '@mui/material/Typography'
+//import Typography from '@mui/material/Typography'
 import TrungQuanDevIcon from '../assets/trungquandev-logo.png'
 import { toast } from 'react-toastify'
 import { API_ROOT } from '~/utils/constants'
@@ -22,7 +22,8 @@ function Login() {
     const res = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/login`, data)
     const userInfo ={
       id: res.data.id,
-      email: res.data.email
+      email: res.data.email,
+      role: res.data.role
     }
     // Lưu token và thông tin user vào localStorage
     localStorage.setItem('accessToken', res.data.accessToken)
@@ -41,11 +42,11 @@ function Login() {
       minHeight: '100vh',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      background: 'url("src/assets/trungquandev-bg-img.jpeg")',
+      background: 'url("src/assets/beautiful-anime-sakura-cityscape-cartoon-scene.jpg")',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.4)'
+      backgroundPosition: 'center'
+      // boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.4)'
     }}>
       <form onSubmit={handleSubmit(submitLogIn)}>
         <Zoom in={true} style={{ transitionDelay: '200ms' }}>
@@ -55,8 +56,8 @@ function Login() {
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', color: theme => theme.palette.grey[500] }}>
               <Box>
-                <Typography>Hint: minhquang030602@gmail.com</Typography>
-                <Typography>Pass: Quang030602</Typography>
+                {/* <Typography>Hint: minhquang030602@gmail.com</Typography>
+                <Typography>Pass: Quang030602</Typography> */}
               </Box>
             </Box>
             <Box sx={{ padding: '0 1em 1em 1em' }}>
