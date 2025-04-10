@@ -1,20 +1,18 @@
-import { useEffect, useState } from 'react'
-import Alert from '@mui/material/Alert'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import CircularProgress from '@mui/material/CircularProgress'
-import Divider from '@mui/material/Divider'
-import authorizedAxiosInstance from '~/utils/authorizedAxios'
-import { API_ROOT, TAB_URL } from '~/utils/constants'
-import { Button } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
-import { handleLogoutAPI } from '~/apis'
-import { Link } from 'react-router-dom'
-import beautifulMoutain from '~/assets/digital-art-beautiful-mountains.jpg'
-import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
+import { Button } from '@mui/material'
+import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
+import Tab from '@mui/material/Tab'
+import Typography from '@mui/material/Typography'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { handleLogoutAPI } from '~/apis'
+import beautifulMoutain from '~/assets/digital-art-beautiful-mountains.jpg'
+import authorizedAxiosInstance from '~/utils/authorizedAxios'
+import { API_ROOT, TAB_URL } from '~/utils/constants'
 
 function Dashboard() {
   const [user, setUser] = useState(null)
@@ -28,8 +26,15 @@ function Dashboard() {
     }
     fetchData()
   }, [])
-  const [tab, setTab] = useState('1')
-
+  const location = useLocation()
+  const getDefaultActiveTab = () => {
+    let activeTab = TAB_URL.DASHBOARD
+    Object.values(TAB_URL).forEach((tabUrl) => {
+      if (location.pathname.includes(tabUrl)) { activeTab = tabUrl }
+    })
+    return activeTab
+  }
+  const [tab, setTab] = useState(getDefaultActiveTab)
   const handleChange = (event, newTab) => {
     setTab(newTab)
   }
@@ -105,11 +110,11 @@ function Dashboard() {
         <TabContext value={tab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label="lab API tabs example">
-              <Tab label="Dashboard" value={TAB_URL.DASHBOARD} />
-              <Tab label="Support" value={TAB_URL.SUPPORT}/>
-              <Tab label="Message" value={TAB_URL.MESSAGE} />
-              <Tab label="Revenue" value={TAB_URL.REVENUE} />
-              <Tab label="Admin Tools" value={TAB_URL.ADMIN_TOOLS} />
+              <Tab label="Dashboard" value={TAB_URL.DASHBOARD} component= {Link} to={'/dashboard'} />
+              <Tab label="Support" value={TAB_URL.SUPPORT} component= {Link} to={'/support'} />
+              <Tab label="Message" value={TAB_URL.MESSAGE} component= {Link} to={'/message'} />
+              <Tab label="Revenue" value={TAB_URL.REVENUE} component= {Link} to={'/revenue'} />
+              <Tab label="Admin Tools" value={TAB_URL.ADMIN_TOOLS} component= {Link} to={'/admin-tools'} />
             </TabList>
           </Box>
           <TabPanel value={TAB_URL.DASHBOARD}>

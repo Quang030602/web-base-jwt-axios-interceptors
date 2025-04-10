@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import Login from '~/pages/Login'
 import Dashboard from '~/pages/Dashboard'
+import NotFound from './pages/NotFound'
 const ProtectedRoute = () => {
   const user = JSON.parse(localStorage.getItem('userInfo'))
   if (!user) {
@@ -28,7 +29,14 @@ function App() {
 
       <Route element={<ProtectedRoute />}>
         <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/support' element={<Dashboard />} />
+        <Route path='/message' element={<Dashboard />} />
+        <Route path='/revenue' element={<Dashboard />} />
+        <Route path='/admin-tools' element={<Dashboard />} />
       </Route>
+
+      <Route path='/access-denied' element={<div>access denied</div>} />
+      <Route path='*' element={<NotFound/>}/>
 
     </Routes>
   )
