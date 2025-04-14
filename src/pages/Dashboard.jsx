@@ -13,6 +13,8 @@ import { handleLogoutAPI } from '~/apis'
 import beautifulMoutain from '~/assets/digital-art-beautiful-mountains.jpg'
 import authorizedAxiosInstance from '~/utils/authorizedAxios'
 import { API_ROOT, TAB_URL } from '~/utils/constants'
+import { usePermission } from '~/hooks/usePermission'
+import { permissions } from '~/config/rbacConfig'
 
 function Dashboard() {
   const [user, setUser] = useState(null)
@@ -26,6 +28,7 @@ function Dashboard() {
     }
     fetchData()
   }, [])
+  const { hasPermission } = usePermission(user?.role)
   const location = useLocation()
   const getDefaultActiveTab = () => {
     let activeTab = TAB_URL.DASHBOARD
@@ -110,53 +113,63 @@ function Dashboard() {
         <TabContext value={tab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label="lab API tabs example">
-              <Tab label="Dashboard" value={TAB_URL.DASHBOARD} component= {Link} to={'/dashboard'} />
-              <Tab label="Support" value={TAB_URL.SUPPORT} component= {Link} to={'/support'} />
-              <Tab label="Message" value={TAB_URL.MESSAGE} component= {Link} to={'/message'} />
-              <Tab label="Revenue" value={TAB_URL.REVENUE} component= {Link} to={'/revenue'} />
-              <Tab label="Admin Tools" value={TAB_URL.ADMIN_TOOLS} component= {Link} to={'/admin-tools'} />
+              {hasPermission(permissions.VIEW_DASHBOARD) && <Tab label="Dashboard" value={TAB_URL.DASHBOARD} component= {Link} to={'/dashboard'} />}
+              {hasPermission(permissions.VIEW_SUPPORT) && <Tab label="Support" value={TAB_URL.SUPPORT} component= {Link} to={'/support'} />}
+              {hasPermission(permissions.VIEW_MESSAGE) && <Tab label="Message" value={TAB_URL.MESSAGE} component= {Link} to={'/message'} />}
+              {hasPermission(permissions.VIEW_REVENUE) && <Tab label="Revenue" value={TAB_URL.REVENUE} component= {Link} to={'/revenue'} />}
+              {hasPermission(permissions.VIEW_ADMIN_TOOLS) && <Tab label="Admin Tools" value={TAB_URL.ADMIN_TOOLS} component= {Link} to={'/admin-tools'} />}
             </TabList>
           </Box>
-          <TabPanel value={TAB_URL.DASHBOARD}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-              Dashboard
-            </Typography>
-            <Typography variant="body1" sx={{ textAlign: 'center' }}>
-              This is the dashboard page.
-            </Typography>
-          </TabPanel>
-          <TabPanel value={TAB_URL.SUPPORT}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-              Support
-            </Typography>
-            <Typography variant="body1" sx={{ textAlign: 'center' }}>
-              This is the support page.
-            </Typography>
-          </TabPanel>
-          <TabPanel value={TAB_URL.MESSAGE}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-              Message
-            </Typography>
-            <Typography variant="body1" sx={{ textAlign: 'center' }}>
-              This is the message page.
-            </Typography>
-          </TabPanel>
-          <TabPanel value={TAB_URL.REVENUE}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-            REVENUE
-            </Typography>
-            <Typography variant="body1" sx={{ textAlign: 'center' }}>
-              This is the revenue page.
-            </Typography>
-          </TabPanel>
-          <TabPanel value={TAB_URL.ADMIN_TOOLS}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-            ADMIN_TOOLS
-            </Typography>
-            <Typography variant="body1" sx={{ textAlign: 'center' }}>
-              This is the admin-tools page.
-            </Typography>
-          </TabPanel>
+          {hasPermission(permissions.VIEW_DASHBOARD) &&
+            <TabPanel value={TAB_URL.DASHBOARD}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+                Dashboard
+              </Typography>
+              <Typography variant="body1" sx={{ textAlign: 'center' }}>
+                This is the dashboard page.
+              </Typography>
+            </TabPanel>
+          }
+          {hasPermission(permissions.VIEW_SUPPORT) &&
+            <TabPanel value={TAB_URL.SUPPORT}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+                Support
+              </Typography>
+              <Typography variant="body1" sx={{ textAlign: 'center' }}>
+                This is the support page.
+              </Typography>
+            </TabPanel>
+          }
+          {hasPermission(permissions.VIEW_MESSAGE) &&
+            <TabPanel value={TAB_URL.MESSAGE}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+                Message
+              </Typography>
+              <Typography variant="body1" sx={{ textAlign: 'center' }}>
+                This is the message page.
+              </Typography>
+            </TabPanel>
+          }
+          {hasPermission(permissions.VIEW_REVENUE) &&
+            <TabPanel value={TAB_URL.REVENUE}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+              REVENUE
+              </Typography>
+              <Typography variant="body1" sx={{ textAlign: 'center' }}>
+                This is the revenue page.
+              </Typography>
+            </TabPanel>
+          }
+          {hasPermission(permissions.VIEW_ADMIN_TOOLS) &&
+            <TabPanel value={TAB_URL.ADMIN_TOOLS}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+              ADMIN_TOOLS
+              </Typography>
+              <Typography variant="body1" sx={{ textAlign: 'center' }}>
+                This is the admin-tools page.
+              </Typography>
+            </TabPanel>
+          }
         </TabContext>
       </Box>
 
