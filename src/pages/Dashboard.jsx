@@ -15,6 +15,7 @@ import authorizedAxiosInstance from '~/utils/authorizedAxios'
 import { API_ROOT, TAB_URL } from '~/utils/constants'
 import { usePermission } from '~/hooks/usePermission'
 import { permissions } from '~/config/rbacConfig'
+import ExcelTableView from '~/components/table'
 
 function Dashboard() {
   const [user, setUser] = useState(null)
@@ -127,9 +128,11 @@ function Dashboard() {
               </Typography>
               <Typography variant="body1" sx={{ textAlign: 'center' }}>
                 This is the dashboard page.
+                <ExcelTableView/>
               </Typography>
             </TabPanel>
           }
+          {/* Check if the user has permission to view the support tab */}
           {hasPermission(permissions.VIEW_SUPPORT) &&
             <TabPanel value={TAB_URL.SUPPORT}>
               <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
@@ -140,6 +143,7 @@ function Dashboard() {
               </Typography>
             </TabPanel>
           }
+          {/* // Check if the user has permission to view the message tab */}
           {hasPermission(permissions.VIEW_MESSAGE) &&
             <TabPanel value={TAB_URL.MESSAGE}>
               <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
@@ -150,6 +154,7 @@ function Dashboard() {
               </Typography>
             </TabPanel>
           }
+          {/* Check if the user has permission to view the revenue tab */}
           {hasPermission(permissions.VIEW_REVENUE) &&
             <TabPanel value={TAB_URL.REVENUE}>
               <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
@@ -160,6 +165,7 @@ function Dashboard() {
               </Typography>
             </TabPanel>
           }
+          {/* Check if the user has permission to view the admin tools tab */}
           {hasPermission(permissions.VIEW_ADMIN_TOOLS) &&
             <TabPanel value={TAB_URL.ADMIN_TOOLS}>
               <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
